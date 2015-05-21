@@ -5,3 +5,11 @@ NATCAR.uvguix.Samuel
 RTE/Device/MKL25Z128xxx4/startup_MKL25Z4.s
 RTE/RTE_Components.h
 RTE/Device/MKL25Z128xxx4/system_MKL25Z4.c
+*.map
+Listings/startup_mkl25z4.lst
+*.crf
+*.o
+Objects/NATCAR.axf
+*.dep
+Objects/NATCAR.lnp
+*.d
