@@ -577,22 +577,13 @@ int main (void) {
               zeroOne2[count]='0';}
             count++;}
           put("\r\nPong: \r\n");}
-        voltMid1 = voltMid1 / voltCounter1; //Calculate voltage midpoint by dividing all black indices with counter
-        voltMid2 = voltMid2/voltCounter2; //bigger LCam number means the line is closer to the car's (left) edge. Smaller RCam number means the line is closer to the car's (right) edge. -1 on either Cam means no line.
+        voltMid1 = voltMid1 / voltCounter1; //Calculate voltage midpoint by dividing all white indices with counter
+        voltMid2 = voltMid2 / voltCounter2; //bigger LCam number means the line is closer to the car's (left) edge. Smaller RCam number means the line is closer to the car's (right) edge. -1 on either Cam means no line.
         /*----------------------------------------------------------------------------
         Turn
         *----------------------------------------------------------------------------*/
         //RIGHT TURN
         if((voltMid2 > 15) && (voltMid2 < 64) && (turn != 2) && (turn != 4)){
-          PW1 = PW1init + 50*(voltMid2-15);
-          if(PW1 > PW1init + 220){
-            turn = 1;
-            PWR = PWinit - 0;
-            PWL = PWinit + 100;
-          }
-        }
-        //LEFT TURN
-        else if((voltMid2 < 113) && (voltMid2 >64) && (turn != 1) && (turn != 3)){
           PW1 = PW1init - 50*(113-voltMid2);
           if(PW1 < PW1init + 220){
             turn = 2;
@@ -600,22 +591,31 @@ int main (void) {
             PWL = PWinit - 0;
           }
         }
-        //RIGHT TURN -- LOWER CAMERA
-        else if((voltMid1 > 15) && (voltMid1 < 64) && (turn != 2) && (turn != 4)){
-          PW1 = PW1init + 50*(voltMid1-15);
-          if(PW1 > PW1init){
-            turn = 3;
-            PWR = PWinit - 300;
-            PWL = PWinit + 0;
+        //LEFT TURN
+        else if((voltMid2 < 113) && (voltMid2 >64) && (turn != 1) && (turn != 3)){
+          PW1 = PW1init + 50*(voltMid2-15);
+          if(PW1 > PW1init + 220){
+            turn = 1;
+            PWR = PWinit - 0;
+            PWL = PWinit + 100;
           }
         }
-        //LEFT TURN -- LOWER CAMERA
-        else if((voltMid1 < 113) && (voltMid1 >64) && (turn != 1) && (turn != 3)){
+        //RIGHT TURN -- LOWER CAMERA
+        else if((voltMid1 > 15) && (voltMid1 < 64) && (turn != 2) && (turn != 4)){
           PW1 = PW1init - 50*(113-voltMid1);
           if(PW1 < PW1init){
             turn = 4;
             PWR = PWinit + 170;
             PWL = PWinit - 90;
+          }
+        }
+        //LEFT TURN -- LOWER CAMERA
+        else if((voltMid1 < 113) && (voltMid1 >64) && (turn != 1) && (turn != 3)){
+          PW1 = PW1init + 50*(voltMid1-15);
+          if(PW1 > PW1init){
+            turn = 3;
+            PWR = PWinit - 300;
+            PWL = PWinit + 0;
           }
         }
         //STRAIGHT
