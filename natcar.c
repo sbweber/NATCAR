@@ -512,21 +512,21 @@ int main (void) {
             if(count>14 & count<113){ //Ignores buffer values <14 and >113 because they are inaccurate
               // Begin voltage scheme
               if(ping1[count] >= voltThreshold1)
-                {zeroOne1[count] = '0';} //If greater than threshold, black/white array gets 1
-              else if(ping1[count] < voltThreshold1){	//If less than threshold, black/white array gets 0
-                zeroOne1[count] = '1';																		
+                {zeroOne1[count] = '1';} //If greater than threshold, black/white array gets 1
+                else if(ping1[count] < voltThreshold1){	//If less than threshold, black/white array gets 0
+                zeroOne1[count] = '0';																		
                 voltMid1 += count; //Add middle-of-black-line index
                 voltCounter1++;} //Increment middle-of-black-line counter
               if(ping2[count] >= voltThreshold2)
-                {zeroOne2[count] = '0';} //1 for white
+                {zeroOne2[count] = '1';} //1 for white
               else if(ping2[count] < voltThreshold2){
-                zeroOne2[count] = '1'; // 0 for black
+                zeroOne2[count] = '0'; // 0 for black
                 voltMid2 += count;
                 voltCounter2++;}
             }
             else
-              {zeroOne1[count]='0';
-              zeroOne2[count]='0';} //Buffer values <14 and >113 automatically get 1
+              {zeroOne1[count]='1';
+              zeroOne2[count]='1';} //Buffer values <14 and >113 automatically get 1
             count++;}
           put("\r\nPing: \r\n");}
         else { //buffSwitch == 2)
@@ -544,9 +544,9 @@ int main (void) {
             if(count>14 & count< 113){
               //Begin voltage scheme
               if(pong1[count] >= voltThreshold1)
-                {zeroOne1[count] = '0';}
+                {zeroOne1[count] = '1';}
               else if(pong1[count] < voltThreshold1){
-                zeroOne1[count] = '1';
+                zeroOne1[count] = '0';
                 voltMid1 += count;
                 voltCounter1++;
                 if(count<64){
@@ -559,9 +559,9 @@ int main (void) {
                 }
               }
               if(pong2[count] >= voltThreshold2)
-                {zeroOne2[count] = '0';}
+                {zeroOne2[count] = '1';}
               else if(pong2[count] < voltThreshold2){
-                zeroOne2[count] = '1';
+                zeroOne2[count] = '0';
                 voltMid2 += count;
                 voltCounter2++;
                 if(count<64){
@@ -573,8 +573,8 @@ int main (void) {
               }
             }
             else
-              {zeroOne1[count]='0';
-              zeroOne2[count]='0';}
+              {zeroOne1[count]='1';
+              zeroOne2[count]='1';}
             count++;}
           put("\r\nPong: \r\n");}
         voltMid1 = voltMid1 / voltCounter1; //Calculate voltage midpoint by dividing all black indices with counter
