@@ -13,3 +13,9 @@ Objects/NATCAR.axf
 *.dep
 Objects/NATCAR.lnp
 *.d
+*.lnp
+Flash/Blinky.sct
+RTE/CMSIS/RTX_Conf_CM.c
+*.iex
+Flash/startup_mkl25z4.lst
+pemicro_connection_settings.ini
