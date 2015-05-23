@@ -528,7 +528,8 @@ int main (void) {
               {zeroOne1[count]='0';
               zeroOne2[count]='0';} //Buffer values <14 and >113 automatically get 1
             count++;}
-          put("\r\nPing: \r\n");}
+//          put("\r\nPing: \r\n");
+				}
         else { //buffSwitch == 2)
           while (count<128){
             if(pong1[count]>max1){max1=pong1[count];}
@@ -576,48 +577,45 @@ int main (void) {
               {zeroOne1[count]='0';
               zeroOne2[count]='0';}
             count++;}
-          put("\r\nPong: \r\n");}
+//          put("\r\nPong: \r\n");
+				}
         voltMid1 = voltMid1 / voltCounter1; //Calculate voltage midpoint by dividing all white indices with counter
         voltMid2 = voltMid2 / voltCounter2; //bigger LCam number means the line is closer to the car's (left) edge. Smaller RCam number means the line is closer to the car's (right) edge. -1 on either Cam means no line.
         /*----------------------------------------------------------------------------
         Turn
         *----------------------------------------------------------------------------*/
-        //RIGHT TURN
-        if((voltMid2 > 15) && (voltMid2 < 64) && (turn != 2) && (turn != 4)){
-          PW1 = PW1init - 50*(113-voltMid2);
-          if(PW1 < PW1init + 220){
-            turn = 2;
-            PWR = PWinit + 100;
-            PWL = PWinit - 0;
-          }
-        }
-        //LEFT TURN
-        else if((voltMid2 < 113) && (voltMid2 >64) && (turn != 1) && (turn != 3)){
-          PW1 = PW1init + 50*(voltMid2-15);
+        if((voltMid2 < 61) && (voltMid2 > 58) && (turn != 2) && (turn != 4)){
+          PW1 = PW1init + 200*(63-voltMid2);
           if(PW1 > PW1init + 220){
             turn = 1;
             PWR = PWinit - 0;
+            PWL = PWinit + 50;
+          }
+        } //RIGHT TURN -- SHALLOW
+        else if((voltMid2 < 58) && (voltMid2 > 10) && (turn != 2) && (turn != 4)){
+          PW1 = PW1init + 50*(voltMid1-15);
+          if(PW1 > PW1init + 220){
+            turn = 3;
+            PWR = PWinit - 0;
             PWL = PWinit + 100;
           }
-        }
-        //RIGHT TURN -- LOWER CAMERA
-        else if((voltMid1 > 15) && (voltMid1 < 64) && (turn != 2) && (turn != 4)){
-          PW1 = PW1init - 50*(113-voltMid1);
-          if(PW1 < PW1init){
+        } //RIGHT TURN -- SHARP
+        else if((voltMid1 > 65) && (voltMid1 < 69) && (turn != 1) && (turn != 3)){
+          PW1 = PW1init + 200*(63-voltMid2);
+          if(PW1 < PW1init + 220){
+            turn = 2;
+            PWR = PWinit + 50;
+            PWL = PWinit - 0;
+          }
+        } //LEFT TURN -- SHALLOW
+        else if((voltMid1 > 69) && (voltMid1 < 100) && (turn != 1) && (turn != 3)){
+          PW1 = PW1init - 50*(113-voltMid2);
+          if(PW1 < PW1init + 220){
             turn = 4;
-            PWR = PWinit + 170;
-            PWL = PWinit - 90;
+            PWR = PWinit + 100;
+            PWL = PWinit - 0;
           }
-        }
-        //LEFT TURN -- LOWER CAMERA
-        else if((voltMid1 < 113) && (voltMid1 >64) && (turn != 1) && (turn != 3)){
-          PW1 = PW1init + 50*(voltMid1-15);
-          if(PW1 > PW1init){
-            turn = 3;
-            PWR = PWinit - 300;
-            PWL = PWinit + 0;
-          }
-        }
+        } //LEFT TURN -- SHARP
         //STRAIGHT
         else{
           PWL = PWR = PWinit;
@@ -634,46 +632,54 @@ int main (void) {
           }
         }
         prevErr1 = voltMid1; prevErr2 = voltMid2;
+				/*
         if(elevation == 1){
           PWL -= 50;
 					PWR -= 50;
           TPM0->CONTROLS[2].CnV = PWR;
           TPM0->CONTROLS[0].CnV = PWL;
         }
+				*/
 				switch (turn)
 				{
-					case 0:
-					case 1:
-					case 2: LEDAll_Off(); break;
-					case 3: 
-					case 4: LEDBlue_On(); break;
+					case 0: LEDGreen_On(); break;
+					case 1: LEDBlue_On(); break;
+					case 2: LEDRed_On(); break;
+					case 3: LEDBlue_On(); break;
+					case 4: LEDRed_On(); break;
 				}
         /*----------------------------------------------------------------------------
         Increase Speed on Straights
         *----------------------------------------------------------------------------*/
-        if (!turn  /*&& (straightSpeed < 50)*/) //if on a straight and hasn't accelerated on it for more than 50
+				/*
+        if (!turn  && (straightSpeed < 50)) //if on a straight and hasn't accelerated on it for more than 50
           straightSpeed += 3;
         else
           straightSpeed = 0;
         PWL += straightSpeed;
         PWR += straightSpeed;
+				*/
         /*----------------------------------------------------------------------------
         Elevation Check
         *----------------------------------------------------------------------------*/ 
+				/*
         if((flagLeft) && (flagRight) && ((hillCounter % 2) == 0)){
           elevation = 1;
           hillCounter++;
 					LEDRed_On();
           Start_PIT1();  //Elevation = 1 until PIT1 interrupt, which sets elevation back to 0
         }
+				*/
         /*----------------------------------------------------------------------------
         Print data
         *----------------------------------------------------------------------------*/
         __disable_irq();
-        put("Right Cam: "); put(zeroOne2); //put("\r\n");
-        sprintf(str, "%d", voltMid2); put(" "); put(str); //put("\r\n");
-        sprintf(str, "%d", R_IFB); put(" "); put(str); put("\r\n");
-        sprintf(str, "%d", PW); put("PW="); put(str); put(" ");
+        put("Bottom Cam: "); put(zeroOne1);
+        sprintf(str, " %d", voltMid1); put(str);
+        sprintf(str, " %d", R_IFB); put(str);
+        put(" || Top Cam: "); put(zeroOne2);
+        sprintf(str, " %d", voltMid2); put(str);
+        sprintf(str, " PW= %d\r\n", PW); put(str);
         __enable_irq();
         Done=0;count=0;
         sum1=0;avg1=0;max1=0;min1=400;voltMid1=0;voltCounter1=0;
